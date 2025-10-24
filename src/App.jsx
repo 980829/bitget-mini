@@ -60,7 +60,7 @@ export default function App() {
 
   // Token listing (spot symbols)
   useEffect(() => {
-    fetch("https://api.bitget.com/api/v2/spot/public/symbols")
+    fetch("/api/spot-symbols")
       .then(r => r.json())
       .then(j => {
         const arr = (j?.data || []).filter(x => x.quoteCoin === "USDT");
@@ -72,7 +72,7 @@ export default function App() {
   // Spot tickers refresh 10s
   useEffect(() => {
     let alive = true;
-    const load = () => fetch("https://api.bitget.com/api/v2/spot/market/tickers")
+    const load = () => fetch("/api/spot-tickers")
       .then(r => r.json())
       .then(j => { if (!alive) return; setTickers(j?.data || []); })
       .catch(err => console.warn("tickers error", err));
@@ -141,7 +141,7 @@ export default function App() {
 
   // Futures tickers (USDT-margined perpetual: UMCBL)
   useEffect(() => {
-    const load = () => fetch("https://api.bitget.com/api/v2/mix/market/tickers?productType=umcbl")
+    const load = () => fetch("/api/futures-tickers")
       .then(r => r.json())
       .then(j => setFutures(j?.data || []))
       .catch(err => console.warn("futures error", err));
@@ -152,7 +152,7 @@ export default function App() {
 
   // News (Bitget Academy RSS)
   useEffect(() => {
-    const url = "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://www.bitget.com/academy/en/rss.xml");
+    const url = "/api/news";
     fetch(url)
       .then(r => r.text())
       .then(xml => {
